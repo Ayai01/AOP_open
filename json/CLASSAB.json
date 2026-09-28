@@ -1,0 +1,1291 @@
+{
+  "algo": "hybrid_ea_v3_beta",
+  "pop_size": 80,
+  "n_gen": 120,
+  "dim": 72,
+  "algo_params": "initial_seed_exact=1",
+  "ckt_name": "CLASSAB",
+  "variable_mapping": {
+    "w_gamma": 1.25,
+    "l_gamma": 1.5
+  },
+  "hspice_content": ".title CLASSAB SMIC18 calibration; explicit PVT qualification\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.option unwrap ingold=2 post=0 numdgt=8 measdgt=8 method=gear co=132\n.param sim_type=0\n.param w_n_3=2e-06 l_n_3=1e-06 w_n_7=2e-06 l_n_7=1e-06 w_n_13=2e-06 l_n_13=1e-06 w_n_14=2e-06 l_n_14=1e-06 w_n_20=2e-06 l_n_20=1e-06 w_n_22=2e-06 l_n_22=1e-06 w_n_23=2e-06 l_n_23=1e-06 w_n_c1=2e-06 l_n_c1=1e-06 w_n_c2=2e-06 l_n_c2=1e-06 w_n_c3=2e-06 l_n_c3=1e-06 w_n_c4=2e-06 l_n_c4=1e-06 w_n_c5=2e-06 l_n_c5=1e-06 w_n_c7=2e-06 l_n_c7=1e-06 w_n_c9=2e-06 l_n_c9=1e-06 w_n_c10=2e-06 l_n_c10=1e-06 w_n_c27=2e-06 l_n_c27=1e-06 w_n_c29=2e-06 l_n_c29=1e-06 w_n_c38=2e-06 l_n_c38=1e-06 w_p_1=4e-06 l_p_1=1e-06 w_p_5=4e-06 l_p_5=1e-06 w_p_11=4e-06 l_p_11=1e-06 w_p_18=4e-06 l_p_18=1e-06 w_p_19=4e-06 l_p_19=1e-06 w_p_21=4e-06 l_p_21=1e-06 w_p_31=4e-06 l_p_31=1e-06 w_p_c15=4e-06 l_p_c15=1e-06 w_p_c16=4e-06 l_p_c16=1e-06 w_p_c17=4e-06 l_p_c17=1e-06 w_p_c18=4e-06 l_p_c18=1e-06 w_p_c19=4e-06 l_p_c19=1e-06 w_p_c20=4e-06 l_p_c20=1e-06 w_p_c21=4e-06 l_p_c21=1e-06 w_p_c22=4e-06 l_p_c22=1e-06 w_p_c33=4e-06 l_p_c33=1e-06 w_p_c34=4e-06 l_p_c34=1e-06 w_p_c36=4e-06 l_p_c36=1e-06\n.subckt calibration_core vdd vss vin vip vo ibias\nm_xm3 net03 vin ib2 vss N18 W=w_n_3 L=l_n_3 M=2\nm_xm4 net04 vip ib2 vss N18 W=w_n_3 L=l_n_3 M=2\nm_xm7 net05 ib4 vss vss N18 W=w_n_7 L=l_n_7 M=2\nm_xm8 net06 ib4 vss vss N18 W=w_n_7 L=l_n_7 M=2\nm_xm13 net07 net08 net09 vss N18 W=w_n_13 L=l_n_13 M=2\nm_xm14 net09 net10 net05 vss N18 W=w_n_14 L=l_n_14 M=2\nm_xm15 net11 net10 net06 vss N18 W=w_n_14 L=l_n_14 M=2\nm_xm16 net05 ib5 vss vss N18 W=w_n_7 L=l_n_7 M=2\nm_xm17 net06 ib5 vss vss N18 W=w_n_7 L=l_n_7 M=2\nm_xm20 net12 net12 vss vss N18 W=w_n_20 L=l_n_20 M=2\nm_xm22 net13 net08 net14 vss N18 W=w_n_22 L=l_n_22 M=2\nm_xm23 net08 net14 vss vss N18 W=w_n_23 L=l_n_23 M=2\nm_xm25 net15 net08 net11 vss N18 W=w_n_22 L=l_n_22 M=2\nm_xm27 vo net11 vss vss N18 W=w_n_23 L=l_n_23 M=4\nm_xm29 ib4 ib4 vss vss N18 W=w_n_7 L=l_n_7 M=2\nm_xm30 ib5 ib5 vss vss N18 W=w_n_7 L=l_n_7 M=2\nm_xmc1 ibias ibias net18 vss N18 W=w_n_c1 L=l_n_c1 M=2\nm_xmc2 net18 ibias vss vss N18 W=w_n_c2 L=l_n_c2 M=2\nm_xmc3 net19 ibias net20 vss N18 W=w_n_c3 L=l_n_c3 M=2\nm_xmc4 net20 net19 vss vss N18 W=w_n_c4 L=l_n_c4 M=2\nm_xmc5 net21 ibias net22 vss N18 W=w_n_c5 L=l_n_c5 M=2\nm_xmc6 net22 net19 vss vss N18 W=w_n_c4 L=l_n_c4 M=2\nm_xmc7 ib6 ibias net23 vss N18 W=w_n_c7 L=l_n_c7 M=2\nm_xmc8 net23 net19 vss vss N18 W=w_n_c4 L=l_n_c4 M=2\nm_xmc9 net24 ibias net25 vss N18 W=w_n_c9 L=l_n_c9 M=2\nm_xmc10 net25 net24 vss vss N18 W=w_n_c10 L=l_n_c10 M=2\nm_xmc11 ib2 ibias net26 vss N18 W=w_n_c9 L=l_n_c9 M=2\nm_xmc12 net26 net24 vss vss N18 W=w_n_c10 L=l_n_c10 M=2\nm_xmc13 ib3 ibias net27 vss N18 W=w_n_c9 L=l_n_c9 M=2\nm_xmc14 net27 net24 vss vss N18 W=w_n_c10 L=l_n_c10 M=2\nm_xmc27 net28 vip net29 vss N18 W=w_n_c27 L=l_n_c27 M=2\nm_xmc28 net30 net19 net29 vss N18 W=w_n_c27 L=l_n_c27 M=2\nm_xmc29 net29 ibias net32 vss N18 W=w_n_c29 L=l_n_c29 M=2\nm_xmc30 net32 net19 vss vss N18 W=w_n_c4 L=l_n_c4 M=2\nm_xmc35 net33 ib5 vss vss N18 W=w_n_7 L=l_n_7 M=2\nm_xmc38 net10 net10 vss vss N18 W=w_n_c38 L=l_n_c38 M=2\nm_xmc39 net34 ib5 vss vss N18 W=w_n_7 L=l_n_7 M=2\nm_xmc40 net14 ib5 vss vss N18 W=w_n_7 L=l_n_7 M=2\nm_xm1 net05 vin ib1 vdd P18 W=w_p_1 L=l_p_1 M=2\nm_xm2 net06 vip ib1 vdd P18 W=w_p_1 L=l_p_1 M=2\nm_xm5 net03 ib3 vdd vdd P18 W=w_p_5 L=l_p_5 M=2\nm_xm6 net04 ib3 vdd vdd P18 W=w_p_5 L=l_p_5 M=2\nm_xm9 net03 net07 vdd vdd P18 W=w_p_5 L=l_p_5 M=2\nm_xm10 net04 net07 vdd vdd P18 W=w_p_5 L=l_p_5 M=2\nm_xm11 net07 net33 net03 vdd P18 W=w_p_11 L=l_p_11 M=2\nm_xm12 net15 net33 net04 vdd P18 W=w_p_11 L=l_p_11 M=2\nm_xm18 net34 net35 vdd vdd P18 W=w_p_18 L=l_p_18 M=2\nm_xm19 net12 net34 net35 vdd P18 W=w_p_19 L=l_p_19 M=2\nm_xm21 net13 net13 vdd vdd P18 W=w_p_21 L=l_p_21 M=2\nm_xm24 net11 net34 net15 vdd P18 W=w_p_19 L=l_p_19 M=2\nm_xm26 vo net15 vdd vdd P18 W=w_p_18 L=l_p_18 M=4\nm_xm28 ib3 ib3 vdd vdd P18 W=w_p_5 L=l_p_5 M=2\nm_xm31 ib6 ib6 vdd vdd P18 W=w_p_31 L=l_p_31 M=2\nm_xmc15 net36 net19 vdd vdd P18 W=w_p_c15 L=l_p_c15 M=2\nm_xmc16 net19 net19 net36 vdd P18 W=w_p_c16 L=l_p_c16 M=2\nm_xmc17 net37 net21 vdd vdd P18 W=w_p_c17 L=l_p_c17 M=2\nm_xmc18 net21 net21 net37 vdd P18 W=w_p_c18 L=l_p_c18 M=2\nm_xmc19 net38 net21 vdd vdd P18 W=w_p_c19 L=l_p_c19 M=2\nm_xmc20 ib5 net19 net38 vdd P18 W=w_p_c20 L=l_p_c20 M=2\nm_xmc21 net39 net28 vdd vdd P18 W=w_p_c21 L=l_p_c21 M=2\nm_xmc22 net24 net19 net39 vdd P18 W=w_p_c22 L=l_p_c22 M=2\nm_xmc23 net40 net28 vdd vdd P18 W=w_p_c21 L=l_p_c21 M=2\nm_xmc24 net41 net30 vdd vdd P18 W=w_p_c21 L=l_p_c21 M=2\nm_xmc25 net28 net19 net40 vdd P18 W=w_p_c22 L=l_p_c22 M=2\nm_xmc26 net30 net19 net41 vdd P18 W=w_p_c22 L=l_p_c22 M=2\nm_xmc31 net42 net30 vdd vdd P18 W=w_p_c21 L=l_p_c21 M=2\nm_xmc32 ib1 net19 net42 vdd P18 W=w_p_c22 L=l_p_c22 M=2\nm_xmc33 net43 net30 vdd vdd P18 W=w_p_c33 L=l_p_c33 M=2\nm_xmc34 ib4 net19 net43 vdd P18 W=w_p_c34 L=l_p_c34 M=2\nm_xmc36 net33 net33 vdd vdd P18 W=w_p_c36 L=l_p_c36 M=2\nm_xmc37 net10 ib6 vdd vdd P18 W=w_p_31 L=l_p_31 M=2\nm_xmc41 net35 ib6 vdd vdd P18 W=w_p_31 L=l_p_31 M=2\nm_xmc42 net08 ib6 vdd vdd P18 W=w_p_31 L=l_p_31 M=2\nrc1 vo comp1 5000\ncc1 net15 comp1 2e-13\nrc2 vo comp2 5000\ncc2 net11 comp2 2e-13\n.ends calibration_core\nXDUT vdd 0 vin vip vo ibias calibration_core\nIBIAS0 vdd ibias DC 1e-05\n.if (sim_type==0)\nVDD vdd 0 DC 1.8\nCLOAD vo 0 1e-12\nVIP vip 0 DC 0.9 AC 1\nLSERVO vo vin 1e12\nCSERVO vin 0 1e12\n.dc VDD 1.8 1.8 .01\n.meas dc test_dc_error find par('abs(v(vo)-0.9)') at=1.8\n.meas dc test_supply_current find par('-i(VDD)') at=1.8\n.ac dec 60 1 1e9\n.print ac vr(vo) vi(vo)\n.noise v(vo) VIP\n.meas ac test_noise find inoise at=1e3\n.meas ac test_onoise find onoise at=1e3\n.meas ac test_noise_gain find vm(vo) at=1e3\n.meas ac test_gain find vdb(vo) at=1\n.meas ac test_ugb find par('hertz') when vdb(vo)=0 cross=1\n.meas ac test_pm find par('vp(vo)+180') when vdb(vo)=0 cross=1\n.meas ac test_gm find par('-vdb(vo)') when vp(vo)=-180 cross=1\n.endif\n.if (sim_type==1)\nVDD vdd 0 DC 1.8 AC 1\nVIP vip 0 DC 0.9\nVFB vin vo 0\nCLOAD vo 0 1e-12\n.dc VDD 1.8 1.8 .01\n.meas dc test_iq find par('-i(VDD)') at=1.8\n.meas dc test_power find par('-i(VDD)*1.8') at=1.8\n.ac lin 1 1000 1000\n.meas ac test_psrr find par('-vdb(vo)') at=1000\n.endif\n.if (sim_type==2)\nVDD vdd 0 DC 1.8\nVFB vin vo 0\nCLOAD vo 0 1e-12\nVIP vip 0 PULSE(1.4 0.4 1n 1p 1p 10u 20u)\n.tran 10n 19.5u\n.meas tran test_rise trig v(vo) val=0.7 rise=1 targ v(vo) val=1.1 rise=1 from=10u to=19u\n.meas tran test_fall trig v(vo) val=1.1 fall=1 targ v(vo) val=0.7 fall=1 from=0u to=9u\n.meas tran test_sr_p param='0.4/test_rise'\n.meas tran test_sr_n param='0.4/test_fall'\n.endif\n.if (sim_type==3)\nVDD vdd 0 DC 1.8\nVFB vin vo 0\nCLOAD vo 0 1e-12\nVIP vip 0 PULSE(0.9 0.91 2u 20n 20n 8u 16u)\n.tran 10n 12u\n.meas tran test_step_error max par('abs(v(vo)-v(vip))') from=7u to=9u\n.endif\n.if (sim_type==4)\nVDD vdd 0 DC 1.8\nVIN vin 0 0.9\nVIP vip 0 0.9\n.dc VIP 0.8 1 0.2\nVCMLOAD load_reference 0 0.9\nRLOAD vo load_reference 1000\n.meas dc test_vol find v(vo) at=0.8\n.meas dc test_voh_headroom find par('1.8-v(vo)') at=1\n.meas dc test_output_rail_error param='max(0,max(-test_vol,max(-test_voh_headroom,max(test_vol-1.8,test_voh_headroom-1.8))))'\n.endif\n.if (sim_type==5)\nVDD vdd 0 DC 1.8\nVIN vin 0 0.9\nVIP vip 0 0.9\n.dc VIP 0.8 1 0.2\nVSHORT vo 0 0.9\n.meas dc test_isc_source find i(VSHORT) at=1\n.meas dc test_isc_sink find par('-i(VSHORT)') at=0.8\n.endif\n.alter\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=1\n.alter\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=2\n.alter\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=3\n.alter\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=4\n.alter\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=5\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=0\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=1\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=2\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=3\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=4\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=5\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=0\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=1\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=2\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=3\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=4\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=5\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=0\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=1\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=2\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=3\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=4\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=5\n.end\n",
+  "variables": [
+    {
+      "name": "w_n_3",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_3"
+    },
+    {
+      "name": "l_n_3",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_3"
+    },
+    {
+      "name": "w_n_7",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_7"
+    },
+    {
+      "name": "l_n_7",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_7"
+    },
+    {
+      "name": "w_n_13",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_13"
+    },
+    {
+      "name": "l_n_13",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_13"
+    },
+    {
+      "name": "w_n_14",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_14"
+    },
+    {
+      "name": "l_n_14",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_14"
+    },
+    {
+      "name": "w_n_20",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_20"
+    },
+    {
+      "name": "l_n_20",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_20"
+    },
+    {
+      "name": "w_n_22",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_22"
+    },
+    {
+      "name": "l_n_22",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_22"
+    },
+    {
+      "name": "w_n_23",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_23"
+    },
+    {
+      "name": "l_n_23",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_23"
+    },
+    {
+      "name": "w_n_c1",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_c1"
+    },
+    {
+      "name": "l_n_c1",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_c1"
+    },
+    {
+      "name": "w_n_c2",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_c2"
+    },
+    {
+      "name": "l_n_c2",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_c2"
+    },
+    {
+      "name": "w_n_c3",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_c3"
+    },
+    {
+      "name": "l_n_c3",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_c3"
+    },
+    {
+      "name": "w_n_c4",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_c4"
+    },
+    {
+      "name": "l_n_c4",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_c4"
+    },
+    {
+      "name": "w_n_c5",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_c5"
+    },
+    {
+      "name": "l_n_c5",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_c5"
+    },
+    {
+      "name": "w_n_c7",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_c7"
+    },
+    {
+      "name": "l_n_c7",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_c7"
+    },
+    {
+      "name": "w_n_c9",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_c9"
+    },
+    {
+      "name": "l_n_c9",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_c9"
+    },
+    {
+      "name": "w_n_c10",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_c10"
+    },
+    {
+      "name": "l_n_c10",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_c10"
+    },
+    {
+      "name": "w_n_c27",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_c27"
+    },
+    {
+      "name": "l_n_c27",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_c27"
+    },
+    {
+      "name": "w_n_c29",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_c29"
+    },
+    {
+      "name": "l_n_c29",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_c29"
+    },
+    {
+      "name": "w_n_c38",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_c38"
+    },
+    {
+      "name": "l_n_c38",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_c38"
+    },
+    {
+      "name": "w_p_1",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_1"
+    },
+    {
+      "name": "l_p_1",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_1"
+    },
+    {
+      "name": "w_p_5",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_5"
+    },
+    {
+      "name": "l_p_5",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_5"
+    },
+    {
+      "name": "w_p_11",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_11"
+    },
+    {
+      "name": "l_p_11",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_11"
+    },
+    {
+      "name": "w_p_18",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_18"
+    },
+    {
+      "name": "l_p_18",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_18"
+    },
+    {
+      "name": "w_p_19",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_19"
+    },
+    {
+      "name": "l_p_19",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_19"
+    },
+    {
+      "name": "w_p_21",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_21"
+    },
+    {
+      "name": "l_p_21",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_21"
+    },
+    {
+      "name": "w_p_31",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_31"
+    },
+    {
+      "name": "l_p_31",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_31"
+    },
+    {
+      "name": "w_p_c15",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_c15"
+    },
+    {
+      "name": "l_p_c15",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_c15"
+    },
+    {
+      "name": "w_p_c16",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_c16"
+    },
+    {
+      "name": "l_p_c16",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_c16"
+    },
+    {
+      "name": "w_p_c17",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_c17"
+    },
+    {
+      "name": "l_p_c17",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_c17"
+    },
+    {
+      "name": "w_p_c18",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_c18"
+    },
+    {
+      "name": "l_p_c18",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_c18"
+    },
+    {
+      "name": "w_p_c19",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_c19"
+    },
+    {
+      "name": "l_p_c19",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_c19"
+    },
+    {
+      "name": "w_p_c20",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_c20"
+    },
+    {
+      "name": "l_p_c20",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_c20"
+    },
+    {
+      "name": "w_p_c21",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_c21"
+    },
+    {
+      "name": "l_p_c21",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_c21"
+    },
+    {
+      "name": "w_p_c22",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_c22"
+    },
+    {
+      "name": "l_p_c22",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_c22"
+    },
+    {
+      "name": "w_p_c33",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_c33"
+    },
+    {
+      "name": "l_p_c33",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_c33"
+    },
+    {
+      "name": "w_p_c34",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_c34"
+    },
+    {
+      "name": "l_p_c34",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_c34"
+    },
+    {
+      "name": "w_p_c36",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_c36"
+    },
+    {
+      "name": "l_p_c36",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_c36"
+    }
+  ],
+  "metrics": [
+    {
+      "name": "gain_db",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "80.0",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_gain\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "dB"
+    },
+    {
+      "name": "ugb_hz",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "10000000.0",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_ugb\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "Hz"
+    },
+    {
+      "name": "phase_margin_deg",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "52.5",
+      "pw": "1.0",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_pm\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "deg"
+    },
+    {
+      "name": "psrr_db",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "60.0",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_psrr\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "dB"
+    },
+    {
+      "name": "input_noise_v_sqrt_hz",
+      "enabled": true,
+      "transform": "log",
+      "worst": "3.5000000000000004e-07",
+      "target": "3.5e-08",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_noise\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "V/sqrt(Hz)"
+    },
+    {
+      "name": "quiescent_current_a",
+      "enabled": true,
+      "transform": "log",
+      "worst": "0.01",
+      "target": "0.001",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_iq\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "A"
+    },
+    {
+      "name": "phase_margin_max_deg",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "180.0",
+      "target": "90.0",
+      "pw": "0.5",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_pm\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "deg"
+    },
+    {
+      "name": "gain_margin_db",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "10.0",
+      "pw": "1.0",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_gm\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "dB"
+    },
+    {
+      "name": "output_vol_v",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "2.0",
+      "target": "0.2",
+      "pw": "0.7937005259840997",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_vol\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "V"
+    },
+    {
+      "name": "output_voh_headroom_v",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "2.0",
+      "target": "0.2",
+      "pw": "0.7937005259840997",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_voh_headroom\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "V"
+    },
+    {
+      "name": "output_rail_error_v",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.1",
+      "target": "0.01",
+      "pw": "0.5",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_output_rail_error\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "V"
+    },
+    {
+      "name": "isc_source_a",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "0.001",
+      "pw": "0.6299605249474366",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_isc_source\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "A"
+    },
+    {
+      "name": "isc_source_max_a",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.04",
+      "target": "0.02",
+      "pw": "0.6299605249474366",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_isc_source\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "A"
+    },
+    {
+      "name": "isc_sink_a",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "0.001",
+      "pw": "0.6299605249474366",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_isc_sink\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "A"
+    },
+    {
+      "name": "isc_sink_max_a",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.04",
+      "target": "0.02",
+      "pw": "0.6299605249474366",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_isc_sink\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "A"
+    },
+    {
+      "name": "slew_rate_positive_v_s",
+      "unit": "V/s",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0",
+      "target": "9000000.0",
+      "pw": "1",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_sr_p\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min"
+    },
+    {
+      "name": "slew_rate_negative_v_s",
+      "unit": "V/s",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0",
+      "target": "9000000.0",
+      "pw": "1",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_sr_n\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min"
+    },
+    {
+      "name": "dc_error_v",
+      "unit": "V",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.5",
+      "target": "0.05",
+      "pw": "0.7937005259840997",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_dc_error\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max"
+    },
+    {
+      "name": "step_error_v",
+      "unit": "V",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.3",
+      "target": "0.03",
+      "pw": "0.7937005259840997",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_step_error\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max"
+    }
+  ],
+  "area_config": {
+    "enabled": true,
+    "pw": "0.5",
+    "fw": "2.0",
+    "target": 8.879999999999999e-10,
+    "worst": 0.001,
+    "unit": "um2",
+    "target_display": "888",
+    "worst_display": "1000000000",
+    "items": [
+      {
+        "f1": "w_n_3",
+        "f2": "l_n_3",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_3",
+        "f2": "l_n_3",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_7",
+        "f2": "l_n_7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_7",
+        "f2": "l_n_7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_13",
+        "f2": "l_n_13",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_14",
+        "f2": "l_n_14",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_14",
+        "f2": "l_n_14",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_7",
+        "f2": "l_n_7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_7",
+        "f2": "l_n_7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_20",
+        "f2": "l_n_20",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_22",
+        "f2": "l_n_22",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_23",
+        "f2": "l_n_23",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_22",
+        "f2": "l_n_22",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_23",
+        "f2": "l_n_23",
+        "f3": "4",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_7",
+        "f2": "l_n_7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_7",
+        "f2": "l_n_7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c1",
+        "f2": "l_n_c1",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c2",
+        "f2": "l_n_c2",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c3",
+        "f2": "l_n_c3",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c4",
+        "f2": "l_n_c4",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c5",
+        "f2": "l_n_c5",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c4",
+        "f2": "l_n_c4",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c7",
+        "f2": "l_n_c7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c4",
+        "f2": "l_n_c4",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c9",
+        "f2": "l_n_c9",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c10",
+        "f2": "l_n_c10",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c9",
+        "f2": "l_n_c9",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c10",
+        "f2": "l_n_c10",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c9",
+        "f2": "l_n_c9",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c10",
+        "f2": "l_n_c10",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c27",
+        "f2": "l_n_c27",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c27",
+        "f2": "l_n_c27",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c29",
+        "f2": "l_n_c29",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c4",
+        "f2": "l_n_c4",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_7",
+        "f2": "l_n_7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_c38",
+        "f2": "l_n_c38",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_7",
+        "f2": "l_n_7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_7",
+        "f2": "l_n_7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_1",
+        "f2": "l_p_1",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_1",
+        "f2": "l_p_1",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_5",
+        "f2": "l_p_5",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_5",
+        "f2": "l_p_5",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_5",
+        "f2": "l_p_5",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_5",
+        "f2": "l_p_5",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_11",
+        "f2": "l_p_11",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_11",
+        "f2": "l_p_11",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_18",
+        "f2": "l_p_18",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_19",
+        "f2": "l_p_19",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_21",
+        "f2": "l_p_21",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_19",
+        "f2": "l_p_19",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_18",
+        "f2": "l_p_18",
+        "f3": "4",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_5",
+        "f2": "l_p_5",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_31",
+        "f2": "l_p_31",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c15",
+        "f2": "l_p_c15",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c16",
+        "f2": "l_p_c16",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c17",
+        "f2": "l_p_c17",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c18",
+        "f2": "l_p_c18",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c19",
+        "f2": "l_p_c19",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c20",
+        "f2": "l_p_c20",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c21",
+        "f2": "l_p_c21",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c22",
+        "f2": "l_p_c22",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c21",
+        "f2": "l_p_c21",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c21",
+        "f2": "l_p_c21",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c22",
+        "f2": "l_p_c22",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c22",
+        "f2": "l_p_c22",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c21",
+        "f2": "l_p_c21",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c22",
+        "f2": "l_p_c22",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c33",
+        "f2": "l_p_c33",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c34",
+        "f2": "l_p_c34",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_c36",
+        "f2": "l_p_c36",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_31",
+        "f2": "l_p_31",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_31",
+        "f2": "l_p_31",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_31",
+        "f2": "l_p_31",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      }
+    ]
+  }
+}

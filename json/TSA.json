@@ -1,0 +1,521 @@
+{
+  "algo": "hybrid_ea_v3_beta",
+  "pop_size": 60,
+  "n_gen": 80,
+  "dim": 26,
+  "algo_params": "initial_seed_exact=1",
+  "ckt_name": "TSA",
+  "variable_mapping": {
+    "w_gamma": 1.25,
+    "l_gamma": 1.5
+  },
+  "hspice_content": ".title TSA SMIC18 calibration; explicit PVT qualification\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.option unwrap ingold=2 post=0 numdgt=8 measdgt=8 method=gear co=132\n.param sim_type=0\n.param w_n_123=2.02e-05 l_n_123=3.29e-06 w_p_4=3e-05 l_p_4=2.18e-06 w_p_5_8=1.46e-06 l_p_5_8=1.8e-07 w_p_6_7=7.79e-06 l_p_6_7=1.81e-06 w_n_9=5e-07 l_n_9=9.09e-06 w_n_10_11=1.999e-05 l_n_10_11=4.96e-06 w_n_12=1.418e-05 l_n_12=2.44e-06 w_p_13_14=1.95e-06 l_p_13_14=3.42e-06 w_p_15_16=9.6e-06 l_p_15_16=3.8e-07 w_n_17_18=1.814e-05 l_n_17_18=2.1e-07 w_n_19_20=5e-07 l_n_19_20=9.79e-06 w_n_21=4.03e-06 l_n_21=3.9e-07 w_p_22=2.08e-05 l_p_22=5.5e-07\n.subckt calibration_core vdd vss vin vip vo ibias\nm1 ibias ibias vss vss N18 W=w_n_123 L=l_n_123 M=2\nm2 vbp2 ibias vss vss N18 W=w_n_123 L=l_n_123 M=2\nm3 vbp1 ibias vss vss N18 W=w_n_123 L=l_n_123 M=2\nm4 vbp2 vbp2 vdd vdd P18 W=w_p_4 L=l_p_4 M=1\nm5 vbp1 ibias net02 vdd P18 W=w_p_5_8 L=l_p_5_8 M=3\nm6 net02 vbp1 vdd vdd P18 W=w_p_6_7 L=l_p_6_7 M=1\nm7 net03 vbp1 vdd vdd P18 W=w_p_6_7 L=l_p_6_7 M=1\nm8 vbn2 vbp2 net03 vdd P18 W=w_p_5_8 L=l_p_5_8 M=3\nm9 vbn2 vbn2 vss vss N18 W=w_n_9 L=l_n_9 M=1\nm10 net05 vin net04 vss N18 W=w_n_10_11 L=l_n_10_11 M=5\nm11 net06 vip net04 vss N18 W=w_n_10_11 L=l_n_10_11 M=5\nm12 net04 ibias vss vss N18 W=w_n_12 L=l_n_12 M=8\nm13 net05 vbp1 vdd vdd P18 W=w_p_13_14 L=l_p_13_14 M=16\nm14 net06 vbp1 vdd vdd P18 W=w_p_13_14 L=l_p_13_14 M=16\nm15 net07 vbp2 net05 vdd P18 W=w_p_15_16 L=l_p_15_16 M=8\nm16 net10 vbp2 net06 vdd P18 W=w_p_15_16 L=l_p_15_16 M=8\nm17 net07 vbn2 net08 vss N18 W=w_n_17_18 L=l_n_17_18 M=1\nm18 net10 vbn2 net09 vss N18 W=w_n_17_18 L=l_n_17_18 M=1\nm19 net08 net07 vss vss N18 W=w_n_19_20 L=l_n_19_20 M=16\nm20 net09 net07 vss vss N18 W=w_n_19_20 L=l_n_19_20 M=32\nm21 vo net10 vss vss N18 W=w_n_21 L=l_n_21 M=40\nm22 vo vbp1 vdd vdd P18 W=w_p_22 L=l_p_22 M=4\ncc net10 net11 3.25e-13\nr1 net11 vo 1500\n.ends calibration_core\nXDUT vdd 0 vin vip vo ibias calibration_core\nIBIAS0 vdd ibias DC 2e-05\n.if (sim_type==0)\nVDD vdd 0 DC 1.8\nCLOAD vo 0 1e-11\nVCMLOAD load_reference 0 0.9\nRLOAD vo load_reference 1000\nVIP vip 0 DC 0.9 AC 1\nLSERVO vo vin 1e12\nCSERVO vin 0 1e12\n.dc VDD 1.8 1.8 .01\n.meas dc test_dc_error find par('abs(v(vo)-0.9)') at=1.8\n.meas dc test_supply_current find par('-i(VDD)') at=1.8\n.ac dec 60 1 1e9\n.print ac vr(vo) vi(vo)\n.noise v(vo) VIP\n.meas ac test_noise find inoise at=1e3\n.meas ac test_onoise find onoise at=1e3\n.meas ac test_noise_gain find vm(vo) at=1e3\n.meas ac test_gain find vdb(vo) at=1\n.meas ac test_ugb find par('hertz') when vdb(vo)=0 cross=1\n.meas ac test_pm find par('vp(vo)+180') when vdb(vo)=0 cross=1\n.meas ac test_gm find par('-vdb(vo)') when vp(vo)=-180 cross=1\n.endif\n.if (sim_type==1)\nVDD vdd 0 DC 1.8 AC 1\nVIP vip 0 DC 0.9\nVFB vin vo 0\n.dc VDD 1.8 1.8 .01\n.meas dc test_iq find par('-i(VDD)') at=1.8\n.meas dc test_power find par('-i(VDD)*1.8') at=1.8\n.ac lin 1 1000 1000\n.meas ac test_psrr find par('-vdb(vo)') at=1000\n.endif\n.if (sim_type==2)\nVDD vdd 0 DC 1.8\nVFB vin vo 0\nCLOAD vo 0 1e-11\nRLOAD vo 0 2000\nVIP vip 0 PULSE(1.4 0.4 1n 1p 1p 10u 20u)\n.tran 10n 19.5u\n.meas tran test_rise trig v(vo) val=0.7 rise=1 targ v(vo) val=1.1 rise=1 from=10u to=19u\n.meas tran test_fall trig v(vo) val=1.1 fall=1 targ v(vo) val=0.7 fall=1 from=0u to=9u\n.meas tran test_sr_p param='0.4/test_rise'\n.meas tran test_sr_n param='0.4/test_fall'\n.endif\n.if (sim_type==3)\nVDD vdd 0 DC 1.8\nVFB vin vo 0\nCLOAD vo 0 1e-11\nVIP vip 0 PULSE(0.9 0.91 2u 20n 20n 8u 16u)\n.tran 10n 12u\n.meas tran test_step_error max par('abs(v(vo)-v(vip))') from=7u to=9u\n.endif\n.alter\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=1\n.alter\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=2\n.alter\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=3\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=0\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=1\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=2\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=3\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=0\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=1\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=2\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=3\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=0\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=1\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=2\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=3\n.end\n",
+  "variables": [
+    {
+      "name": "w_n_123",
+      "min": 5e-07,
+      "max": 2.9999999999999997e-05,
+      "step": 1e-08,
+      "group": "n_123"
+    },
+    {
+      "name": "l_n_123",
+      "min": 1.8e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_123"
+    },
+    {
+      "name": "w_p_4",
+      "min": 5e-07,
+      "max": 2.9999999999999997e-05,
+      "step": 1e-08,
+      "group": "p_4"
+    },
+    {
+      "name": "l_p_4",
+      "min": 1.8e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_4"
+    },
+    {
+      "name": "w_p_5_8",
+      "min": 5e-07,
+      "max": 2.9999999999999997e-05,
+      "step": 1e-08,
+      "group": "p_5_8"
+    },
+    {
+      "name": "l_p_5_8",
+      "min": 1.8e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_5_8"
+    },
+    {
+      "name": "w_p_6_7",
+      "min": 5e-07,
+      "max": 2.9999999999999997e-05,
+      "step": 1e-08,
+      "group": "p_6_7"
+    },
+    {
+      "name": "l_p_6_7",
+      "min": 1.8e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_6_7"
+    },
+    {
+      "name": "w_n_9",
+      "min": 5e-07,
+      "max": 2.9999999999999997e-05,
+      "step": 1e-08,
+      "group": "n_9"
+    },
+    {
+      "name": "l_n_9",
+      "min": 1.8e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_9"
+    },
+    {
+      "name": "w_n_10_11",
+      "min": 5e-07,
+      "max": 2.9999999999999997e-05,
+      "step": 1e-08,
+      "group": "n_10_11"
+    },
+    {
+      "name": "l_n_10_11",
+      "min": 1.8e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_10_11"
+    },
+    {
+      "name": "w_n_12",
+      "min": 5e-07,
+      "max": 2.9999999999999997e-05,
+      "step": 1e-08,
+      "group": "n_12"
+    },
+    {
+      "name": "l_n_12",
+      "min": 1.8e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_12"
+    },
+    {
+      "name": "w_p_13_14",
+      "min": 5e-07,
+      "max": 2.9999999999999997e-05,
+      "step": 1e-08,
+      "group": "p_13_14"
+    },
+    {
+      "name": "l_p_13_14",
+      "min": 1.8e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_13_14"
+    },
+    {
+      "name": "w_p_15_16",
+      "min": 5e-07,
+      "max": 2.9999999999999997e-05,
+      "step": 1e-08,
+      "group": "p_15_16"
+    },
+    {
+      "name": "l_p_15_16",
+      "min": 1.8e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_15_16"
+    },
+    {
+      "name": "w_n_17_18",
+      "min": 5e-07,
+      "max": 2.9999999999999997e-05,
+      "step": 1e-08,
+      "group": "n_17_18"
+    },
+    {
+      "name": "l_n_17_18",
+      "min": 1.8e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_17_18"
+    },
+    {
+      "name": "w_n_19_20",
+      "min": 5e-07,
+      "max": 2.9999999999999997e-05,
+      "step": 1e-08,
+      "group": "n_19_20"
+    },
+    {
+      "name": "l_n_19_20",
+      "min": 1.8e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_19_20"
+    },
+    {
+      "name": "w_n_21",
+      "min": 5e-07,
+      "max": 2.9999999999999997e-05,
+      "step": 1e-08,
+      "group": "n_21"
+    },
+    {
+      "name": "l_n_21",
+      "min": 1.8e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_21"
+    },
+    {
+      "name": "w_p_22",
+      "min": 5e-07,
+      "max": 2.9999999999999997e-05,
+      "step": 1e-08,
+      "group": "p_22"
+    },
+    {
+      "name": "l_p_22",
+      "min": 1.8e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_22"
+    }
+  ],
+  "metrics": [
+    {
+      "name": "gain_db",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "80.0",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_gain\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "dB"
+    },
+    {
+      "name": "ugb_hz",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "12000000.0",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_ugb\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "Hz"
+    },
+    {
+      "name": "phase_margin_deg",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "52.5",
+      "pw": "1.0",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_pm\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "deg"
+    },
+    {
+      "name": "psrr_db",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "60.0",
+      "pw": "1.0",
+      "fw": "0.5",
+      "regex_preset": "normal",
+      "regex": "\\btest_psrr\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "dB"
+    },
+    {
+      "name": "input_noise_v_sqrt_hz",
+      "enabled": true,
+      "transform": "log",
+      "worst": "3e-07",
+      "target": "3e-08",
+      "pw": "3.0",
+      "fw": "1.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_noise\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "V/sqrt(Hz)"
+    },
+    {
+      "name": "gain_margin_db",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "1.0",
+      "target": "10.0",
+      "pw": "1.5",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_gm\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "dB"
+    },
+    {
+      "name": "slew_rate_positive_v_s",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "12000000.0",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_sr_p\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "V/s"
+    },
+    {
+      "name": "slew_rate_negative_v_s",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "12000000.0",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_sr_n\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "V/s"
+    },
+    {
+      "name": "power_w",
+      "enabled": true,
+      "transform": "log",
+      "worst": "0.015",
+      "target": "0.0015",
+      "pw": "2.0",
+      "fw": "2.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_power\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "W"
+    },
+    {
+      "name": "phase_margin_max_deg",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "180.0",
+      "target": "90.0",
+      "pw": "0.5",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_pm\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "deg"
+    },
+    {
+      "name": "dc_error_v",
+      "unit": "V",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.5",
+      "target": "0.05",
+      "pw": "0.7937005259840997",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_dc_error\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max"
+    },
+    {
+      "name": "step_error_v",
+      "unit": "V",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.3",
+      "target": "0.03",
+      "pw": "0.7937005259840997",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_step_error\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max"
+    }
+  ],
+  "area_config": {
+    "enabled": true,
+    "pw": "0.5",
+    "fw": "2.0",
+    "target": 2e-09,
+    "worst": 0.001,
+    "unit": "um2",
+    "target_display": "2000",
+    "worst_display": "1000000000",
+    "items": [
+      {
+        "f1": "w_n_123",
+        "f2": "l_n_123",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_123",
+        "f2": "l_n_123",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_123",
+        "f2": "l_n_123",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_4",
+        "f2": "l_p_4",
+        "f3": "1",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_5_8",
+        "f2": "l_p_5_8",
+        "f3": "3",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_6_7",
+        "f2": "l_p_6_7",
+        "f3": "1",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_6_7",
+        "f2": "l_p_6_7",
+        "f3": "1",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_5_8",
+        "f2": "l_p_5_8",
+        "f3": "3",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_9",
+        "f2": "l_n_9",
+        "f3": "1",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_10_11",
+        "f2": "l_n_10_11",
+        "f3": "5",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_10_11",
+        "f2": "l_n_10_11",
+        "f3": "5",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_12",
+        "f2": "l_n_12",
+        "f3": "8",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_13_14",
+        "f2": "l_p_13_14",
+        "f3": "16",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_13_14",
+        "f2": "l_p_13_14",
+        "f3": "16",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_15_16",
+        "f2": "l_p_15_16",
+        "f3": "8",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_15_16",
+        "f2": "l_p_15_16",
+        "f3": "8",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_17_18",
+        "f2": "l_n_17_18",
+        "f3": "1",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_17_18",
+        "f2": "l_n_17_18",
+        "f3": "1",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_19_20",
+        "f2": "l_n_19_20",
+        "f3": "16",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_19_20",
+        "f2": "l_n_19_20",
+        "f3": "32",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_21",
+        "f2": "l_n_21",
+        "f3": "40",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_22",
+        "f2": "l_p_22",
+        "f3": "4",
+        "f4": "1",
+        "f5": "1"
+      }
+    ]
+  }
+}

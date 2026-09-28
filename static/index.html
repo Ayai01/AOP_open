@@ -1,0 +1,438 @@
+<!-- static/index.html -->
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <title>Analog Optimizer Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem('aop.ui.theme');
+        const language = localStorage.getItem('aop.ui.language');
+        document.documentElement.dataset.theme = saved === 'light' ? 'light' : 'dark';
+        document.documentElement.lang = language === 'en' ? 'en' : 'zh-CN';
+      } catch (error) {
+        document.documentElement.dataset.theme = 'dark';
+        document.documentElement.lang = 'zh-CN';
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="./style.css?v=20260924axis"/>
+</head>
+<body>
+  <!-- Navigation -->
+  <aside class="sidebar">
+    <h2>AnalogOpt</h2>
+    <nav id="navbar">
+      <button data-page="1" class="active">首页</button>
+      <button data-page="2">网表设置</button>
+      <button data-page="3">优化设置</button>
+      <button data-page="4">算法设置</button>
+      <button data-page="5">算法可视化</button>
+      <button data-page="6">小工具</button>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <!-- Home -->
+    <section id="page1" class="page">
+      <div class="page-head">
+        <div>
+          <h2>控制中心</h2>
+          <div class="page-head-subtitle">运行状态、工程配置与全局界面设置</div>
+        </div>
+        <div class="global-ui-controls" aria-label="Global interface settings">
+          <label class="compact-control">
+            <span>语言</span>
+            <select id="languageSelect">
+              <option value="zh">中文</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <label class="compact-control">
+            <span>主题</span>
+            <select id="themeSelect">
+              <option value="dark">夜间</option>
+              <option value="light">日间</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>运行控制</h3>
+        <div class="row wrap run-control-row">
+          <button id="startBtn" class="btn">开始优化</button>
+          <button id="stopBtn" class="btn">终止优化</button>
+          <button id="shutdownBtn" class="btn warn">关闭服务器</button>
+          <label class="field cpu-workers-field">
+            <span>CPU 并行核心数</span>
+            <input id="cpuWorkers" type="number" min="1" step="1" inputmode="numeric" />
+          </label>
+          <span id="cpuWorkersHint" class="muted-note">连接服务器后加载默认值</span>
+        </div>
+        <div class="row">
+          <span>连接：</span><span id="connBadge" class="badge badge-off">未连接</span>
+          <span class="status-gap">状态：</span><span id="runBadge" class="badge badge-idle">空闲</span>
+        </div>
+      </div>
+
+
+      <div class="card">
+        <h3>配置导入 / 导出</h3>
+        <div class="row">
+          <button id="exportBtn" class="btn">导出 JSON</button>
+          <label class="import-label">
+            <input type="file" id="importFile" accept=".json" hidden />
+            <span class="btn">导入 JSON</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>最终结果</h3>
+        <div class="row wrap result-actions">
+          <button id="exportCktBtn" class="btn">导出网表</button>
+          <button id="exportSkillBtn" class="btn ml8">导出 SKILL 脚本</button>
+          <span class="muted-note ml8">
+            基于当前最优解生成所选仿真器网表和 Virtuoso SKILL 脚本
+          </span>
+        </div>
+        <pre id="finalResultTextHome" class="mono"></pre>
+      </div>
+
+    </section>
+
+    <!-- Netlist -->
+    <section id="page2" class="page">
+      <div class="card">
+        <h3>网表设置</h3>
+        <div class="row">
+          <label class="field">
+            <span>电路名称：</span>
+            <input id="cktName" placeholder="ckt_1"/>
+          </label>
+          <label class="field">
+            <span>仿真器：</span>
+            <select id="simulatorSelect">
+              <option value="hspice">HSPICE</option>
+              <option value="ngspice">ngspice</option>
+            </select>
+          </label>
+        </div>
+        <div id="ngspiceOptions" hidden>
+          <p class="muted-note">ngspice 需要兼容的网表和模型。选择仿真器不会转换工艺；原 HSPICE 配置保留。使用原生 .meas 读取指标，不读取 HSPICE 电源功耗表。</p>
+          <div class="row wrap">
+            <label class="field"><span>可执行文件</span><input id="ngspiceCommand" placeholder="ngspice 或完整路径" /></label>
+            <label class="field"><span>每角超时（秒）</span><input id="ngspiceTimeout" type="number" min="1" value="30" /></label>
+            <label class="field"><span>模型兼容模式</span><select id="ngspiceCompatibility"><option value="native">原生</option><option value="hs">HSPICE 模型语法（需验证）</option></select></label>
+          </div>
+          <div class="row wrap">
+            <label class="field"><span>模型文件（可选）</span><input id="ngspiceModelFile" placeholder="模型 .lib / .spice 路径" /></label>
+            <label class="field"><span>模型段（可选）</span><input id="ngspiceModelSection" placeholder="例如 SS" /></label>
+          </div>
+          <label class="field block"><span>独立工艺角 / 温度（可选 JSON 数组；每角需完整测量）</span><textarea id="ngspiceCorners" rows="3" placeholder='[{"name":"SS_cold","model_section":"SS","temperature_c":-40},{"name":"FF_hot","model_section":"FF","temperature_c":125}]'></textarea></label>
+          <label class="field block"><span>ngspice 原生网表覆盖（可选；留空使用下方文本）</span><textarea id="ngspiceNetlist" rows="10" placeholder="使用 .meas、.print 和 .end；不自动转换 .alter 或 .control。模型文件字段与网表中的 .lib/.include 二选一。"></textarea></label>
+          <p class="muted-note">尺寸、指标、目标和面积仍沿用当前配置。多角提取使用各指标既定的 first/min/max/avg；任一角缺测均保留为无效。ngspice 仅复用本次运行内的缓存。导出网表包含第一个角，导出 JSON 保留全部角。</p>
+        </div>
+        <div class="row">
+          <label class="field block">
+            <span>网表文本（原 hspice_content 字段；包含 .param，可有 + 续行）</span>
+            <textarea id="hspiceText" rows="60" placeholder=".param w1=1e-6 w2=2e-6
++ l1=0.5e-6"></textarea>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Optimization settings -->
+    <section id="page3" class="page">
+      <div class="card">
+        <h3>变量参数</h3>
+        <div class="table-scroll">
+          <table id="varTable">
+            <thead>
+            <tr>
+              <th>变量名</th><th>最小值</th><th>最大值</th><th>步长</th><th>分组</th><th>操作</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="row wrap mt10">
+          <button id="addVarBtn" class="btn">添加变量</button>
+          <button id="autoVarBtn" class="btn">从 .param 自动识别</button>
+          <span class="muted-note">基于网表中第一个 .param 块</span>
+        </div>
+
+        <div class="row wrap mt8">
+          <span class="text-small">显示模式：</span>
+          <button class="btn btn-small display-mode-btn" data-mode="unit">u/n/p 工程单位</button>
+          <button class="btn btn-small display-mode-btn" data-mode="sci">科学计数法</button>
+          <button class="btn btn-small display-mode-btn" data-mode="eng">工程计数(e±3k)</button>
+        </div>
+
+        <div class="row wrap mt8 muted-note">
+          <span>默认范围：</span>
+        </div>
+        <div class="row wrap range-row">
+          <label class="field">
+            <span>W:</span>
+            <input id="defWMin" value="220n"/>
+            <span>~</span>
+            <input id="defWMax" value="100u"/>
+            <span>step</span>
+            <input id="defWStep" value="5n"/>
+          </label>
+          <button id="applyWAll" class="btn btn-small">应用到全部 W</button>
+        </div>
+        <div class="row wrap range-row">
+          <label class="field">
+            <span>L:</span>
+            <input id="defLMin" value="180n"/>
+            <span>~</span>
+            <input id="defLMax" value="10u"/>
+            <span>step</span>
+            <input id="defLStep" value="5n"/>
+          </label>
+          <button id="applyLAll" class="btn btn-small">应用到全部 L</button>
+        </div>
+        <div class="row wrap range-row">
+          <label class="field">
+            <span>M:</span>
+            <input id="defMMin" value="1"/>
+            <span>~</span>
+            <input id="defMMax" value="100"/>
+            <span>step</span>
+            <input id="defMStep" value="1"/>
+          </label>
+          <button id="applyMAll" class="btn btn-small">应用到全部 M</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>仿真指标</h3>
+        <div id="metricsBox"></div>
+        <button id="addMetricBtn" class="btn mt8">添加指标</button>
+      </div>
+
+      <div class="card">
+        <h3>Area Calc</h3>
+        <div class="row">
+          <label><input type="checkbox" id="areaEnabled"/> 启用</label>
+        </div>
+        <div class="table-scroll">
+          <table id="areaTable">
+            <thead>
+            <tr>
+              <th>factor1</th><th>factor2</th><th>factor3</th><th>factor4</th><th>factor5</th><th>操作</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="row">
+          <button id="addAreaRow" class="btn">添加行</button>
+          <button id="autoFillArea" class="btn">AutoFill</button>
+        </div>
+        <div class="row wrap">
+          <label class="field"><span>约束强度 pw</span><input id="areaPw" value="0.5"/></label>
+          <label class="field"><span>目标权重 fw</span><input id="areaFw" value="1"/></label>
+          <label class="field"><span>最差估计 worst</span><input id="areaWorst" value="1"/></label>
+          <label class="field"><span>优化目标 target</span><input id="areaTarget" value="1e-8"/>
+            <select id="areaUnit">
+              <option value="um2">μm²</option>
+              <option value="m2">m²</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Algorithm settings -->
+    <section id="page4" class="page">
+      <div class="card">
+        <h3>算法参数</h3>
+        <div class="row wrap">
+          <label class="field">
+            <span>算法：</span>
+            <select id="algoSelect"></select>
+          </label>
+          <label class="field">
+            <span>种群大小：</span>
+            <input id="popSize" type="number" value="40" min="2"/>
+          </label>
+          <label class="field">
+            <span>总代数：</span>
+            <input id="nGen" type="text" value="80" inputmode="numeric" placeholder="80 或 inf"/>
+          </label>
+        </div>
+        <div class="row wrap mt8 initial-values-row">
+          <label class="initial-values-control">
+            <input id="allowInitialValues" type="checkbox" checked />
+            <span>允许算法使用网表初始值</span>
+          </label>
+          <span class="muted-note">关闭后，运行时将 .param 中与优化变量同名的值替换为上下界几何平均数；不修改当前文本框中的原始网表。</span>
+        </div>
+        <div class="row wrap mt8">
+          <label class="field block" >
+            <span>参数定义组</span>
+            <input id="algoParams" placeholder="例如: pop_size=40; n_gen=80; cr=0.9; mr=0.1"/>
+          </label>
+          <span class="muted-note">
+            修改种群大小 / 总代数会同步更新到此处；反之亦然。总代数可填 inf，表示仅手动停止。
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visualization -->
+    <section id="page5" class="page">
+      <div class="page-head">
+        <div>
+          <h2>算法可视化</h2>
+          <div class="page-head-subtitle">种群结构、优化历史与运行诊断</div>
+        </div>
+      </div>
+
+      <div class="card viz-controls-card">
+        <h3>可视化设置</h3>
+        <div class="viz-control-grid">
+          <label class="field">
+            <span>Fit 配色</span>
+            <select id="fitPaletteSelect">
+              <option value="classic">蓝 / 绿 / 红 / 灰（默认）</option>
+              <option value="blackbody">黑体温度 · 鲜明</option>
+              <option value="turbo">Turbo 光谱</option>
+              <option value="viridis">Viridis</option>
+              <option value="magma">Magma</option>
+            </select>
+          </label>
+          <label class="field fit-tail-field">
+            <span>最差灰化尾部</span>
+            <div class="inline-range">
+              <input id="fitGrayTail" type="range" min="0" max="50" step="5" value="25"/>
+              <output id="fitGrayTailValue">25%</output>
+            </div>
+          </label>
+          <label class="field dim-reduction-field">
+            <span>降维方法</span>
+            <select id="dimReductionSelect">
+              <option value="pca">PCA · 实时</option>
+              <option value="umap">UMAP · 实时</option>
+              <option value="tsne">t-SNE · 实时</option>
+              <option value="mds">MDS · 实时</option>
+            </select>
+            <small id="dimReductionStatus" class="muted-note dim-reduction-status">PCA · 等待种群</small>
+          </label>
+        </div>
+        <div class="fit-palette-preview-wrap">
+          <canvas id="fitPalettePreview" width="720" height="28"></canvas>
+          <div class="fit-palette-labels">
+            <span>更好 / lower fit</span>
+            <span>更差 / higher fit</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress log -->
+      <div class="card">
+        <h3>进度日志</h3>
+        <pre id="progressText" class="log"></pre>
+      </div>
+
+      <!-- Population details -->
+      <div class="card">
+        <h3>种群信息</h3>
+        <pre id="popInfoText" class="log"></pre>
+      </div>
+
+      <!-- Population embedding and fitness distribution -->
+      <div class="card">
+        <h3>种群展示（2D-Embedding + fit 分布）</h3>
+        <canvas id="emb2dCanvas" width="800" height="400"></canvas>
+      </div>
+
+      <!-- History -->
+      <div class="card">
+        <h3>历史曲线</h3>
+        <div id="historyChartsContainer" class="history-row"></div>
+      </div>
+
+      <!-- Final result -->
+      <div class="card">
+        <h3>最终结果</h3>
+        <pre id="finalResultText" class="mono"></pre>
+      </div>
+    
+    </section>
+
+    <!-- Tools -->
+    <section id="page6" class="page">
+      <h2>小工具</h2>
+
+      <!-- Preview metric extraction with Python-style regular expressions -->
+      <div class="card">
+        <h3>正则提取规则测试</h3>
+
+        <div class="row wrap">
+          <label class="field block" >
+            <span>测试字符串</span>
+            <textarea id="reTestText" rows="30"
+              placeholder="在这里粘贴仿真输出等原始文本"></textarea>
+          </label>
+        </div>
+
+        <div class="row wrap">
+          <label class="field">
+            <span>正则表达式</span>
+            <input id="rePattern"
+                   placeholder="例如: test_gain\\s*=\\s*([-+]?[0-9]+[.]?[0-9]*[eE]?[-+]?[0-9]*)"/>
+          </label>
+
+          <label class="field">
+            <span>提取规则</span>
+            <select id="reExtract">
+              <option value="first">first</option>
+              <option value="min">min</option>
+              <option value="max">max</option>
+              <option value="avg">avg</option>
+              <option value="0">0（第 1 个分组）</option>
+              <option value="1">1（第 2 个分组）</option>
+              <option value="2">2（第 3 个分组）</option>
+            </select>
+          </label>
+
+          <button id="reTestBtn" class="btn">测试匹配</button>
+        </div>
+
+        <div class="row wrap">
+          <label class="field block" >
+            <span>测试结果</span>
+            <pre id="reResult" class="log log-compact"></pre>
+          </label>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="./utils.js?v=20260921a"></script>
+  <script src="./i18n.js?v=20260921a"></script>
+  <script src="./state.js?v=20260921a"></script>
+  <script src="./layout.js?v=20260924refactor"></script>
+  <script src="./variables.js?v=20260921a"></script>
+  <script src="./metrics.js?v=20260921a"></script>
+  <script src="./algo.js?v=20260921a"></script>
+  <script src="./ui_prefs.js?v=20260924refactor"></script>
+  <script src="./charts.js?v=20260924diversity"></script>
+  <script src="./history.js?v=20260924refactor"></script>
+  <script src="./visual.js?v=20260924diversity"></script>
+  <script src="./tools.js?v=20260921a"></script>
+  <script src="./config.js?v=20260921a"></script>
+  <script src="./runtime.js?v=20260924refactor"></script>
+</body>
+</html>
+

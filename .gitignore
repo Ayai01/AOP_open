@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+results/
+hsp_files/
+hsp_model/
+*.log
+*.lis
+*.cache
+*.npy
+*.npz

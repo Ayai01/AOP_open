@@ -1,0 +1,780 @@
+{
+  "algo": "hybrid_ea_v3_beta",
+  "pop_size": 80,
+  "n_gen": 120,
+  "dim": 50,
+  "algo_params": "initial_seed_exact=1",
+  "ckt_name": "FSA",
+  "variable_mapping": {
+    "w_gamma": 1.25,
+    "l_gamma": 1.5
+  },
+  "hspice_content": ".title FSA SMIC18 calibration; explicit PVT qualification\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.option unwrap ingold=2 post=0 numdgt=8 measdgt=8 method=gear co=132\n.param sim_type=0\n.param w_p_mb3=4e-06 l_p_mb3=1e-06 w_p_mb5=4e-06 l_p_mb5=1e-06 w_n_mb6=2e-06 l_n_mb6=1e-06 w_n_mb7=2e-06 l_n_mb7=1e-06 w_p_mb9=4e-06 l_p_mb9=1e-06 w_p_mb1=4e-06 l_p_mb1=1e-06 w_p_mb2=4e-06 l_p_mb2=1e-06 w_p_m1=4e-06 l_p_m1=1e-06 w_p_m3=4e-06 l_p_m3=1e-06 w_n_m5=2e-06 l_n_m5=1e-06 w_n_m7=2e-06 l_n_m7=1e-06 w_p_m9=4e-06 l_p_m9=1e-06 w_n_m10=2e-06 l_n_m10=1e-06 w_p_m11=4e-06 l_p_m11=1e-06 w_n_m12=2e-06 l_n_m12=1e-06 w_p_m13=4e-06 l_p_m13=1e-06 w_n_m14=2e-06 l_n_m14=1e-06 w_p_m15=4e-06 l_p_m15=1e-06 w_n_m16=2e-06 l_n_m16=1e-06 w_p_m17=4e-06 l_p_m17=1e-06 w_n_m18=2e-06 l_n_m18=1e-06 w_p_m19=4e-06 l_p_m19=1e-06 w_n_m21=2e-06 l_n_m21=1e-06 w_p_m23=4e-06 l_p_m23=1e-06 w_n_m25=2e-06 l_n_m25=1e-06\n.subckt calibration_core vdd vss vin vip vo ibias\nmb3 vbp1 vbp1 vdd vdd P18 W=w_p_mb3 L=l_p_mb3 M=2\nmb4 vbn2 vbp1 vdd vdd P18 W=w_p_mb3 L=l_p_mb3 M=2\nmb5 ibias ibias vbp1 vdd P18 W=w_p_mb5 L=l_p_mb5 M=2\nmb6 vbn2 vbn2 vbn1 vss N18 W=w_n_mb6 L=l_n_mb6 M=2\nmb7 vbn1 vbn1 vss vss N18 W=w_n_mb7 L=l_n_mb7 M=2\nmb8 vbp2 vbn1 vss vss N18 W=w_n_mb7 L=l_n_mb7 M=2\nmb9 vbp2 vbp2 vdd vdd P18 W=w_p_mb9 L=l_p_mb9 M=2\nmb1 tail_in vbp1 vdd vdd P18 W=w_p_mb1 L=l_p_mb1 M=2\nmb2 tail_srh vbp2 vdd vdd P18 W=w_p_mb2 L=l_p_mb2 M=2\nm1 fold_l vin tail_in vdd P18 W=w_p_m1 L=l_p_m1 M=2\nm2 fold_r vip tail_in vdd P18 W=w_p_m1 L=l_p_m1 M=2\nm3 mirror_l mirror_l vdd vdd P18 W=w_p_m3 L=l_p_m3 M=2\nm4 n1 mirror_l vdd vdd P18 W=w_p_m3 L=l_p_m3 M=2\nm5 mirror_l vbn2 fold_l vss N18 W=w_n_m5 L=l_n_m5 M=2\nm6 n1 vbn2 fold_r vss N18 W=w_n_m5 L=l_n_m5 M=2\nm7 fold_l vbn1 vss vss N18 W=w_n_m7 L=l_n_m7 M=2\nm8 fold_r vbn1 vss vss N18 W=w_n_m7 L=l_n_m7 M=2\nm9 n2 n1 vdd vdd P18 W=w_p_m9 L=l_p_m9 M=2\nm10 n2 nz vss vss N18 W=w_n_m10 L=l_n_m10 M=2\nm11 n3 vbp2 vdd vdd P18 W=w_p_m11 L=l_p_m11 M=2\nm12 n3 n2 vss vss N18 W=w_n_m12 L=l_n_m12 M=2\nm13 n4 n3 vdd vdd P18 W=w_p_m13 L=l_p_m13 M=2\nm14 n4 n4 vss vss N18 W=w_n_m14 L=l_n_m14 M=2\nm15 n5 vbp2 vdd vdd P18 W=w_p_m15 L=l_p_m15 M=2\nm16 n5 n4 vss vss N18 W=w_n_m16 L=l_n_m16 M=2\nm17 vo n1 vdd vdd P18 W=w_p_m17 L=l_p_m17 M=2\nm18 vo n5 vss vss N18 W=w_n_m18 L=l_n_m18 M=2\nm19 srh_l vip tail_srh vdd P18 W=w_p_m19 L=l_p_m19 M=2\nm20 srh_r vin tail_srh vdd P18 W=w_p_m19 L=l_p_m19 M=2\nm21 srh_l vbn1 vss vss N18 W=w_n_m21 L=l_n_m21 M=2\nm22 srh_r vbn1 vss vss N18 W=w_n_m21 L=l_n_m21 M=2\nm23 vo srh_mirror vdd vdd P18 W=w_p_m23 L=l_p_m23 M=2\nm24 srh_mirror srh_mirror vdd vdd P18 W=w_p_m23 L=l_p_m23 M=2\nm25 vo srh_l vss vss N18 W=w_n_m25 L=l_n_m25 M=2\nm26 srh_mirror srh_r vss vss N18 W=w_n_m25 L=l_n_m25 M=2\nrz n2 nz 5000\ncz nz vss 2e-13\ncm n1 vo 1e-12\n.ends calibration_core\nXDUT vdd 0 vin vip vo ibias calibration_core\nIBIAS0 ibias 0 DC 5e-06\n.if (sim_type==0)\nVDD vdd 0 DC 1.8\nCLOAD vo 0 1e-12\nVIP vip 0 DC 0.9 AC 1\nLSERVO vo vin 1e12\nCSERVO vin 0 1e12\n.dc VDD 1.8 1.8 .01\n.meas dc test_dc_error find par('abs(v(vo)-0.9)') at=1.8\n.meas dc test_supply_current find par('-i(VDD)') at=1.8\n.ac dec 60 1 1e9\n.print ac vr(vo) vi(vo)\n.noise v(vo) VIP\n.meas ac test_noise find inoise at=1e3\n.meas ac test_onoise find onoise at=1e3\n.meas ac test_noise_gain find vm(vo) at=1e3\n.meas ac test_gain find vdb(vo) at=1\n.meas ac test_ugb find par('hertz') when vdb(vo)=0 cross=1\n.meas ac test_pm find par('vp(vo)+180') when vdb(vo)=0 cross=1\n.meas ac test_gm find par('-vdb(vo)') when vp(vo)=-180 cross=1\n.endif\n.if (sim_type==1)\nVDD vdd 0 DC 1.8 AC 1\nVIP vip 0 DC 0.9\nVFB vin vo 0\nCLOAD vo 0 1e-12\n.dc VDD 1.8 1.8 .01\n.meas dc test_iq find par('-i(VDD)') at=1.8\n.meas dc test_power find par('-i(VDD)*1.8') at=1.8\n.ac lin 1 1000 1000\n.meas ac test_psrr find par('-vdb(vo)') at=1000\n.endif\n.if (sim_type==2)\nVDD vdd 0 DC 1.8\nVFB vin vo 0\nCLOAD vo 0 1e-12\nVIP vip 0 PULSE(1.4 0.4 1n 1p 1p 10u 20u)\n.tran 10n 19.5u\n.meas tran test_rise trig v(vo) val=0.7 rise=1 targ v(vo) val=1.1 rise=1 from=10u to=19u\n.meas tran test_fall trig v(vo) val=1.1 fall=1 targ v(vo) val=0.7 fall=1 from=0u to=9u\n.meas tran test_sr_p param='0.4/test_rise'\n.meas tran test_sr_n param='0.4/test_fall'\n.endif\n.if (sim_type==3)\nVDD vdd 0 DC 1.8\nVFB vin vo 0\nCLOAD vo 0 1e-12\nVIP vip 0 PULSE(0.9 0.91 2u 20n 20n 8u 16u)\n.tran 10n 12u\n.meas tran test_step_error max par('abs(v(vo)-v(vip))') from=7u to=9u\n.endif\n.alter\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=1\n.alter\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=2\n.alter\n.temp 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=3\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=0\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=1\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=2\n.alter\n.temp -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=3\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=0\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=1\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=2\n.alter\n.temp 125\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=3\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=0\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=1\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=2\n.alter\n.temp -40\n.del lib 1 SS\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=3\n.end\n",
+  "variables": [
+    {
+      "name": "w_p_mb3",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_mb3"
+    },
+    {
+      "name": "l_p_mb3",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_mb3"
+    },
+    {
+      "name": "w_p_mb5",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_mb5"
+    },
+    {
+      "name": "l_p_mb5",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_mb5"
+    },
+    {
+      "name": "w_n_mb6",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_mb6"
+    },
+    {
+      "name": "l_n_mb6",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_mb6"
+    },
+    {
+      "name": "w_n_mb7",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_mb7"
+    },
+    {
+      "name": "l_n_mb7",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_mb7"
+    },
+    {
+      "name": "w_p_mb9",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_mb9"
+    },
+    {
+      "name": "l_p_mb9",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_mb9"
+    },
+    {
+      "name": "w_p_mb1",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_mb1"
+    },
+    {
+      "name": "l_p_mb1",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_mb1"
+    },
+    {
+      "name": "w_p_mb2",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_mb2"
+    },
+    {
+      "name": "l_p_mb2",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_mb2"
+    },
+    {
+      "name": "w_p_m1",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_m1"
+    },
+    {
+      "name": "l_p_m1",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_m1"
+    },
+    {
+      "name": "w_p_m3",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_m3"
+    },
+    {
+      "name": "l_p_m3",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_m3"
+    },
+    {
+      "name": "w_n_m5",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_m5"
+    },
+    {
+      "name": "l_n_m5",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_m5"
+    },
+    {
+      "name": "w_n_m7",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_m7"
+    },
+    {
+      "name": "l_n_m7",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_m7"
+    },
+    {
+      "name": "w_p_m9",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_m9"
+    },
+    {
+      "name": "l_p_m9",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_m9"
+    },
+    {
+      "name": "w_n_m10",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_m10"
+    },
+    {
+      "name": "l_n_m10",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_m10"
+    },
+    {
+      "name": "w_p_m11",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_m11"
+    },
+    {
+      "name": "l_p_m11",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_m11"
+    },
+    {
+      "name": "w_n_m12",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_m12"
+    },
+    {
+      "name": "l_n_m12",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_m12"
+    },
+    {
+      "name": "w_p_m13",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_m13"
+    },
+    {
+      "name": "l_p_m13",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_m13"
+    },
+    {
+      "name": "w_n_m14",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_m14"
+    },
+    {
+      "name": "l_n_m14",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_m14"
+    },
+    {
+      "name": "w_p_m15",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_m15"
+    },
+    {
+      "name": "l_p_m15",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_m15"
+    },
+    {
+      "name": "w_n_m16",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_m16"
+    },
+    {
+      "name": "l_n_m16",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_m16"
+    },
+    {
+      "name": "w_p_m17",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_m17"
+    },
+    {
+      "name": "l_p_m17",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_m17"
+    },
+    {
+      "name": "w_n_m18",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_m18"
+    },
+    {
+      "name": "l_n_m18",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_m18"
+    },
+    {
+      "name": "w_p_m19",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_m19"
+    },
+    {
+      "name": "l_p_m19",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_m19"
+    },
+    {
+      "name": "w_n_m21",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_m21"
+    },
+    {
+      "name": "l_n_m21",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_m21"
+    },
+    {
+      "name": "w_p_m23",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "p_m23"
+    },
+    {
+      "name": "l_p_m23",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "p_m23"
+    },
+    {
+      "name": "w_n_m25",
+      "min": 5e-07,
+      "max": 1.2e-05,
+      "step": 1e-08,
+      "group": "n_m25"
+    },
+    {
+      "name": "l_n_m25",
+      "min": 1.8e-07,
+      "max": 3e-06,
+      "step": 1e-08,
+      "group": "n_m25"
+    }
+  ],
+  "metrics": [
+    {
+      "name": "gain_db",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "110.0",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_gain\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "dB"
+    },
+    {
+      "name": "ugb_hz",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "1500000.0",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_ugb\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "Hz"
+    },
+    {
+      "name": "phase_margin_deg",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "52.5",
+      "pw": "1.0",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_pm\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "deg"
+    },
+    {
+      "name": "psrr_db",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "60.0",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_psrr\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "dB"
+    },
+    {
+      "name": "input_noise_v_sqrt_hz",
+      "enabled": true,
+      "transform": "log",
+      "worst": "0.0035",
+      "target": "0.00035",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_noise\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "V/sqrt(Hz)"
+    },
+    {
+      "name": "quiescent_current_a",
+      "enabled": true,
+      "transform": "log",
+      "worst": "0.005",
+      "target": "0.0005",
+      "pw": "1.0",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_iq\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "A"
+    },
+    {
+      "name": "phase_margin_max_deg",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "180.0",
+      "target": "90.0",
+      "pw": "0.5",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_pm\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "unit": "deg"
+    },
+    {
+      "name": "gain_margin_db",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.0",
+      "target": "10.0",
+      "pw": "1.0",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_gm\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "unit": "dB"
+    },
+    {
+      "name": "slew_rate_positive_v_s",
+      "unit": "V/s",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0",
+      "target": "1400000.0",
+      "pw": "1",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_sr_p\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min"
+    },
+    {
+      "name": "slew_rate_negative_v_s",
+      "unit": "V/s",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0",
+      "target": "1400000.0",
+      "pw": "1",
+      "fw": "0.1",
+      "regex_preset": "normal",
+      "regex": "\\btest_sr_n\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min"
+    },
+    {
+      "name": "dc_error_v",
+      "unit": "V",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.5",
+      "target": "0.05",
+      "pw": "0.7937005259840997",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_dc_error\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max"
+    },
+    {
+      "name": "step_error_v",
+      "unit": "V",
+      "enabled": true,
+      "transform": "linear",
+      "worst": "0.3",
+      "target": "0.03",
+      "pw": "0.7937005259840997",
+      "fw": "0.0",
+      "regex_preset": "normal",
+      "regex": "\\btest_step_error\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max"
+    }
+  ],
+  "area_config": {
+    "enabled": true,
+    "pw": "0.5",
+    "fw": "2.0",
+    "target": 4.32e-10,
+    "worst": 0.001,
+    "unit": "um2",
+    "target_display": "432",
+    "worst_display": "1000000000",
+    "items": [
+      {
+        "f1": "w_p_mb3",
+        "f2": "l_p_mb3",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_mb3",
+        "f2": "l_p_mb3",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_mb5",
+        "f2": "l_p_mb5",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_mb6",
+        "f2": "l_n_mb6",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_mb7",
+        "f2": "l_n_mb7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_mb7",
+        "f2": "l_n_mb7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_mb9",
+        "f2": "l_p_mb9",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_mb1",
+        "f2": "l_p_mb1",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_mb2",
+        "f2": "l_p_mb2",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_m1",
+        "f2": "l_p_m1",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_m1",
+        "f2": "l_p_m1",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_m3",
+        "f2": "l_p_m3",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_m3",
+        "f2": "l_p_m3",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_m5",
+        "f2": "l_n_m5",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_m5",
+        "f2": "l_n_m5",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_m7",
+        "f2": "l_n_m7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_m7",
+        "f2": "l_n_m7",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_m9",
+        "f2": "l_p_m9",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_m10",
+        "f2": "l_n_m10",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_m11",
+        "f2": "l_p_m11",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_m12",
+        "f2": "l_n_m12",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_m13",
+        "f2": "l_p_m13",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_m14",
+        "f2": "l_n_m14",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_m15",
+        "f2": "l_p_m15",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_m16",
+        "f2": "l_n_m16",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_m17",
+        "f2": "l_p_m17",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_m18",
+        "f2": "l_n_m18",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_m19",
+        "f2": "l_p_m19",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_m19",
+        "f2": "l_p_m19",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_m21",
+        "f2": "l_n_m21",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_m21",
+        "f2": "l_n_m21",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_m23",
+        "f2": "l_p_m23",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_p_m23",
+        "f2": "l_p_m23",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_m25",
+        "f2": "l_n_m25",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      },
+      {
+        "f1": "w_n_m25",
+        "f2": "l_n_m25",
+        "f3": "2",
+        "f4": "1",
+        "f5": "1"
+      }
+    ]
+  }
+}

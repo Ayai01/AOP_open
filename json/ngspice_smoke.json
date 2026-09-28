@@ -1,0 +1,53 @@
+{
+  "algo": "hybrid_ea_v3_beta",
+  "pop_size": 8,
+  "n_gen": 1,
+  "dim": 1,
+  "algo_params": "",
+  "workers": 1,
+  "ckt_name": "ngspice_native_resistor_smoke",
+  "simulator": "ngspice",
+  "simulator_options": {
+    "timeout_seconds": 30,
+    "compatibility": "native",
+    "corners": [
+      {
+        "name": "cold",
+        "temperature_c": -40
+      },
+      {
+        "name": "hot",
+        "temperature_c": 125
+      }
+    ]
+  },
+  "hspice_content": "* Native ngspice interface smoke; resistor divider, not a calibrated process model\n.param r1=1000\nVDD in 0 DC 1\nR1 in out {r1}\nR2 out 0 1000\n.dc VDD 0.9 1.1 0.1\n.print dc v(out)\n.meas dc output_voltage find v(out) at=1\n.end\n",
+  "allow_initial_values": true,
+  "variables": [
+    {
+      "name": "r1",
+      "min": 500,
+      "max": 1500,
+      "step": 10,
+      "group": "resistor"
+    }
+  ],
+  "metrics": [
+    {
+      "name": "output_voltage",
+      "transform": "linear",
+      "worst": 0.1,
+      "target": 0.6,
+      "enabled": true,
+      "regex_preset": "normal",
+      "regex": "",
+      "extract": "min",
+      "pw": 1,
+      "fw": 1
+    }
+  ],
+  "area_config": {
+    "enabled": false,
+    "items": []
+  }
+}

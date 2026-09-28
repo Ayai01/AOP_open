@@ -1,0 +1,513 @@
+{
+  "algo": "hybrid_ea_v3_beta",
+  "pop_size": 80,
+  "n_gen": 500,
+  "dim": 28,
+  "algo_params": "pop_size=80; n_gen=500",
+  "ckt_name": "TSA",
+  "hspice_content": ".title TSA\n.TEMP 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.OPTION UNWRAP INGOLD=1 POST=0 NUMDGT=8 METHOD=gear\n.param w123=8.85e-07 l123=8.79e-06 w4=7.555e-06 l4=1.71e-06 w5_8=5.3785e-05 l5_8=1.89e-06 w6_7=2.2e-07 l6_7=1.8e-07 w9=6.83e-06 l9=1.21e-06 w10_11=9.6545e-05 l10_11=3.73e-06 w12=7.7e-07 l12=9.425e-06 w13_14=2.2e-07 l13_14=3.875e-06 w15_16=7.115e-06 l15_16=5.7e-07 w17_18=1.2435e-05 l17_18=5.85e-07 w19_20=2.842e-05 l19_20=1.11e-06 w21=0.0001 l21=1.8e-07 w22=8.5e-07 l22=1.8e-07 cc=3.25e-13 r1=1196\n.param vdd_v=1.8 sim_type=0\n\n.subckt TSA vdd vss vin vip vo\nM1 Vbn1 Vbn1 vss vss N18 W=w123 L=l123 M=2\nM2 Vbp2 Vbn1 vss vss N18 W=w123 L=l123 M=2\nM3 Vbp1 Vbn1 vss vss N18 W=w123 L=l123 M=2\nM4 Vbp2 Vbp2 vdd vdd P18 W=w4 L=l4\nM5 Vbp1 Vbn1 net02 vdd P18 W=w5_8 L=l5_8\nM6 net02 Vbp1 vdd vdd P18 W=w6_7 L=l6_7\nM7 net03 Vbp1 vdd vdd P18 W=w6_7 L=l6_7\nM8 Vbn2 Vbp2 net03 vdd P18 W=w5_8 L=l5_8\nM9 Vbn2 Vbn2 vss vss N18 W=w9 L=l9\nI1 vdd Vbn1 DC 20u\nM10 net05 vin net04 vss N18 W=w10_11 L=l10_11\nM11 net06 vip net04 vss N18 W=w10_11 L=l10_11\nM12 net04 Vbn1 vss vss N18 W=w12 L=l12 M=8\nM13 net05 Vbp1 vdd vdd P18 W=w13_14 L=l13_14 M=16\nM14 net06 Vbp1 vdd vdd P18 W=w13_14 L=l13_14 M=16\nM15 net07 Vbp2 net05 vdd P18 W=w15_16 L=l15_16 M=8\nM16 net10 Vbp2 net06 vdd P18 W=w15_16 L=l15_16 M=8\nM17 net07 Vbn2 net08 vss N18 W=w17_18 L=l17_18\nM18 net10 Vbn2 net09 vss N18 W=w17_18 L=l17_18\nM19 net08 net07 vss vss N18 W=w19_20 L=l19_20 M=8\nM20 net09 net07 vss vss N18 W=w19_20 L=l19_20 M=16\nM21 vo net10 vss vss N18 W=w21 L=l21 M=8\nM22 vo vbp1 vdd vdd P18 W=w22 L=l22 M=4\nCc net10 net11 cc\nR1 net11 vo r1\n.ends TSA\n\n.if(sim_type==0)\n.param vcm=0.9\nxi0 vdd0 0 vin_n0 vin_p0 vout0 TSA\nv00 vdd0 0 DC=vdd_v\nv01 vin_p0 0 DC=vcm AC=1.0\nv03 net_vcm 0 DC=vcm\nr00 vout0 net_vcm 1k\nc00 vout0 net_vcm 10p\nl00 vin_n0 vout0 1T\nc01 vin_n0 0 1T\n\n.ac dec 5 1 1e8\n.noise v(vout0) v01\n.meas ac test_inoise_1k find inoise when par('hertz')=1e3\n.meas ac test_onoise_1k find onoise when par('hertz')=1e3\n.meas ac test_gain find vdb(vout0) when par('hertz')=1\n.meas ac test_ugb find par('hertz') when vdb(vout0)=0\n.meas ac test_pm find par('vp(vout0)+180') when vdb(vout0)=0\n.meas ac test_gm find par('-vdb(vout0)') when vp(vout0)=-180\n.endif\n\n.if(sim_type==1)\nxi1 vdd1 0 vout1 vin_p1 vout1 TSA\nv10 vdd1 0 DC=vdd_v AC=1.0\nv11 vin_p1 0 DC=vdd_v/2\n.ac lin 1 1k 1k\n.meas ac test_psrr find par('-vdb(vout1)') at=1k\n.endif\n\n.if(sim_type==2)\nxi2 vdd2 0 vout2 vin_p2 vout2 TSA\nv20 vdd2 0 DC=vdd_v\nv21 vin_p2 0 pulse vdd_v-0.40 0.40 0.001u 1e-12 1e-12 10u 20u\nr20 vout2 0 2k\nc20 vout2 0 10p\n.tran 0.01u 19.5u\n.meas tran test_rise_time trig v(vout2) val=0.70 rise=1 targ v(vout2) val=vdd_v-0.70 rise=1 from=10us to=19us\n.meas tran test_fall_time trig v(vout2) val=vdd_v-0.70 fall=1 targ v(vout2) val=0.70 fall=1 from=0us to=9us\n.meas test_sr_p param='(vdd_v-1.4)/test_rise_time'\n.meas test_sr_n param='(vdd_v-1.4)/test_fall_time'\n.endif\n\n* Corner 1: SS @ 125℃\n* sim_type = 0 已经是 base\n.alter\n.TEMP 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=1\n.alter\n.TEMP 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=2\n\n* Corner 2: SS @ -40℃\n.alter\n.TEMP -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=0\n.alter\n.TEMP -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=1\n.alter\n.TEMP -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" SS\n.param sim_type=2\n\n* Corner 3: FF @ 125℃\n.alter\n.TEMP 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=0\n.alter\n.TEMP 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=1\n.alter\n.TEMP 125\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=2\n\n* Corner 4: FF @ -40℃\n.alter\n.TEMP -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=0\n.alter\n.TEMP -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=1\n.alter\n.TEMP -40\n.lib \"./hsp_model/smic18_hsp_model/ms018_v1p7.lib\" FF\n.param sim_type=2\n\n.end",
+  "variables": [
+    {
+      "name": "w123",
+      "min": 2.2e-07,
+      "max": 9.999999999999999e-05,
+      "step": 5e-09,
+      "group": "w123",
+      "min_display": "220n",
+      "max_display": "100u",
+      "step_display": "5n"
+    },
+    {
+      "name": "l123",
+      "min": 1.8000000000000002e-07,
+      "max": 9.999999999999999e-06,
+      "step": 5e-09,
+      "group": "l123",
+      "min_display": "180n",
+      "max_display": "10u",
+      "step_display": "5n"
+    },
+    {
+      "name": "w4",
+      "min": 2.2e-07,
+      "max": 9.999999999999999e-05,
+      "step": 5e-09,
+      "group": "w4",
+      "min_display": "220n",
+      "max_display": "100u",
+      "step_display": "5n"
+    },
+    {
+      "name": "l4",
+      "min": 1.8000000000000002e-07,
+      "max": 9.999999999999999e-06,
+      "step": 5e-09,
+      "group": "l4",
+      "min_display": "180n",
+      "max_display": "10u",
+      "step_display": "5n"
+    },
+    {
+      "name": "w5_8",
+      "min": 2.2e-07,
+      "max": 9.999999999999999e-05,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "220n",
+      "max_display": "100u",
+      "step_display": "5n"
+    },
+    {
+      "name": "l5_8",
+      "min": 1.8000000000000002e-07,
+      "max": 9.999999999999999e-06,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "180n",
+      "max_display": "10u",
+      "step_display": "5n"
+    },
+    {
+      "name": "w6_7",
+      "min": 2.2e-07,
+      "max": 9.999999999999999e-05,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "220n",
+      "max_display": "100u",
+      "step_display": "5n"
+    },
+    {
+      "name": "l6_7",
+      "min": 1.8000000000000002e-07,
+      "max": 9.999999999999999e-06,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "180n",
+      "max_display": "10u",
+      "step_display": "5n"
+    },
+    {
+      "name": "w9",
+      "min": 2.2e-07,
+      "max": 9.999999999999999e-05,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "220n",
+      "max_display": "100u",
+      "step_display": "5n"
+    },
+    {
+      "name": "l9",
+      "min": 1.8000000000000002e-07,
+      "max": 9.999999999999999e-06,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "180n",
+      "max_display": "10u",
+      "step_display": "5n"
+    },
+    {
+      "name": "w10_11",
+      "min": 2.2e-07,
+      "max": 9.999999999999999e-05,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "220n",
+      "max_display": "100u",
+      "step_display": "5n"
+    },
+    {
+      "name": "l10_11",
+      "min": 1.8000000000000002e-07,
+      "max": 9.999999999999999e-06,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "180n",
+      "max_display": "10u",
+      "step_display": "5n"
+    },
+    {
+      "name": "w12",
+      "min": 2.2e-07,
+      "max": 9.999999999999999e-05,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "220n",
+      "max_display": "100u",
+      "step_display": "5n"
+    },
+    {
+      "name": "l12",
+      "min": 1.8000000000000002e-07,
+      "max": 9.999999999999999e-06,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "180n",
+      "max_display": "10u",
+      "step_display": "5n"
+    },
+    {
+      "name": "w13_14",
+      "min": 2.2e-07,
+      "max": 9.999999999999999e-05,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "220n",
+      "max_display": "100u",
+      "step_display": "5n"
+    },
+    {
+      "name": "l13_14",
+      "min": 1.8000000000000002e-07,
+      "max": 9.999999999999999e-06,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "180n",
+      "max_display": "10u",
+      "step_display": "5n"
+    },
+    {
+      "name": "w15_16",
+      "min": 2.2e-07,
+      "max": 9.999999999999999e-05,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "220n",
+      "max_display": "100u",
+      "step_display": "5n"
+    },
+    {
+      "name": "l15_16",
+      "min": 1.8000000000000002e-07,
+      "max": 9.999999999999999e-06,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "180n",
+      "max_display": "10u",
+      "step_display": "5n"
+    },
+    {
+      "name": "w17_18",
+      "min": 2.2e-07,
+      "max": 9.999999999999999e-05,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "220n",
+      "max_display": "100u",
+      "step_display": "5n"
+    },
+    {
+      "name": "l17_18",
+      "min": 1.8000000000000002e-07,
+      "max": 9.999999999999999e-06,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "180n",
+      "max_display": "10u",
+      "step_display": "5n"
+    },
+    {
+      "name": "w19_20",
+      "min": 2.2e-07,
+      "max": 9.999999999999999e-05,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "220n",
+      "max_display": "100u",
+      "step_display": "5n"
+    },
+    {
+      "name": "l19_20",
+      "min": 1.8000000000000002e-07,
+      "max": 9.999999999999999e-06,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "180n",
+      "max_display": "10u",
+      "step_display": "5n"
+    },
+    {
+      "name": "w21",
+      "min": 2.2e-07,
+      "max": 9.999999999999999e-05,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "220n",
+      "max_display": "100u",
+      "step_display": "5n"
+    },
+    {
+      "name": "l21",
+      "min": 1.8000000000000002e-07,
+      "max": 9.999999999999999e-06,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "180n",
+      "max_display": "10u",
+      "step_display": "5n"
+    },
+    {
+      "name": "w22",
+      "min": 2.2e-07,
+      "max": 9.999999999999999e-05,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "220n",
+      "max_display": "100u",
+      "step_display": "5n"
+    },
+    {
+      "name": "l22",
+      "min": 1.8000000000000002e-07,
+      "max": 9.999999999999999e-06,
+      "step": 5e-09,
+      "group": "",
+      "min_display": "180n",
+      "max_display": "10u",
+      "step_display": "5n"
+    },
+    {
+      "name": "cc",
+      "min": 1.0000000000000002e-14,
+      "max": 2e-11,
+      "step": 1e-15,
+      "group": "",
+      "min_display": "10f",
+      "max_display": "20p",
+      "step_display": "1f"
+    },
+    {
+      "name": "r1",
+      "min": 1,
+      "max": 5000,
+      "step": 1,
+      "group": "",
+      "min_display": "1",
+      "max_display": "5k",
+      "step_display": "1"
+    }
+  ],
+  "metrics": [
+    {
+      "name": "gain",
+      "transform": "linear",
+      "worst": "0",
+      "target": "80",
+      "enabled": true,
+      "regex_preset": "normal",
+      "supply_name": "",
+      "regex": "\\btest_gain\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "pw": "1",
+      "fw": "0.1"
+    },
+    {
+      "name": "ugb",
+      "transform": "linear",
+      "worst": "0",
+      "target": "12e6",
+      "enabled": true,
+      "regex_preset": "normal",
+      "supply_name": "",
+      "regex": "\\btest_ugb\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "pw": "1",
+      "fw": "0.5"
+    },
+    {
+      "name": "pm",
+      "transform": "linear",
+      "worst": "0",
+      "target": "52.5",
+      "enabled": true,
+      "regex_preset": "normal",
+      "supply_name": "",
+      "regex": "\\btest_pm\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "pw": "1",
+      "fw": "0.1"
+    },
+    {
+      "name": "gm",
+      "transform": "linear",
+      "worst": "1",
+      "target": "10",
+      "enabled": true,
+      "regex_preset": "normal",
+      "supply_name": "",
+      "regex": "\\btest_gm\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "pw": "1.5",
+      "fw": "0"
+    },
+    {
+      "name": "noise",
+      "transform": "log",
+      "worst": "3e-7",
+      "target": "3e-8",
+      "enabled": true,
+      "regex_preset": "normal",
+      "supply_name": "",
+      "regex": "\\btest_inoise_1k\\b\\s*=\\s*([^\\s]+)",
+      "extract": "max",
+      "pw": "1",
+      "fw": "1.0"
+    },
+    {
+      "name": "psrr",
+      "transform": "linear",
+      "worst": "0",
+      "target": "60",
+      "enabled": true,
+      "regex_preset": "normal",
+      "supply_name": "",
+      "regex": "\\btest_psrr\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "pw": "1",
+      "fw": "0.1"
+    },
+    {
+      "name": "sr+",
+      "transform": "linear",
+      "worst": "0",
+      "target": "12e6",
+      "enabled": true,
+      "regex_preset": "normal",
+      "supply_name": "",
+      "regex": "\\btest_sr_p\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "pw": "1",
+      "fw": "0.1"
+    },
+    {
+      "name": "sr-",
+      "transform": "linear",
+      "worst": "0",
+      "target": "12e6",
+      "enabled": true,
+      "regex_preset": "normal",
+      "supply_name": "",
+      "regex": "\\btest_sr_n\\b\\s*=\\s*([^\\s]+)",
+      "extract": "min",
+      "pw": "1",
+      "fw": "0.1"
+    },
+    {
+      "name": "power",
+      "transform": "log",
+      "worst": "1.5e-2",
+      "target": "1.5e-3",
+      "enabled": true,
+      "regex_preset": "power",
+      "supply_name": "0:v10",
+      "regex": "power\\s*=\\s*([-+]?[0-9]+[.]?[0-9]*[eE]?[-+]?[0-9]*)",
+      "extract": "max",
+      "pw": "2",
+      "fw": "1.0"
+    }
+  ],
+  "area_config": {
+    "enabled": true,
+    "items": [
+      {
+        "f1": "w123",
+        "f2": "l123",
+        "f3": "1.0",
+        "f4": "1.0",
+        "f5": "1.0"
+      },
+      {
+        "f1": "w4",
+        "f2": "l4",
+        "f3": "1.0",
+        "f4": "1.0",
+        "f5": "1.0"
+      },
+      {
+        "f1": "w5_8",
+        "f2": "l5_8",
+        "f3": "1.0",
+        "f4": "1.0",
+        "f5": "1.0"
+      },
+      {
+        "f1": "w6_7",
+        "f2": "l6_7",
+        "f3": "1.0",
+        "f4": "1.0",
+        "f5": "1.0"
+      },
+      {
+        "f1": "w9",
+        "f2": "l9",
+        "f3": "1.0",
+        "f4": "1.0",
+        "f5": "1.0"
+      },
+      {
+        "f1": "w10_11",
+        "f2": "l10_11",
+        "f3": "1.0",
+        "f4": "1.0",
+        "f5": "1.0"
+      },
+      {
+        "f1": "w12",
+        "f2": "l12",
+        "f3": "1.0",
+        "f4": "1.0",
+        "f5": "1.0"
+      },
+      {
+        "f1": "w13_14",
+        "f2": "l13_14",
+        "f3": "1.0",
+        "f4": "1.0",
+        "f5": "1.0"
+      },
+      {
+        "f1": "w15_16",
+        "f2": "l15_16",
+        "f3": "1.0",
+        "f4": "1.0",
+        "f5": "1.0"
+      },
+      {
+        "f1": "w17_18",
+        "f2": "l17_18",
+        "f3": "1.0",
+        "f4": "1.0",
+        "f5": "1.0"
+      },
+      {
+        "f1": "w19_20",
+        "f2": "l19_20",
+        "f3": "1.0",
+        "f4": "1.0",
+        "f5": "1.0"
+      },
+      {
+        "f1": "w21",
+        "f2": "l21",
+        "f3": "1.0",
+        "f4": "1.0",
+        "f5": "1.0"
+      },
+      {
+        "f1": "w22",
+        "f2": "l22",
+        "f3": "1.0",
+        "f4": "1.0",
+        "f5": "1.0"
+      }
+    ],
+    "pw": "0.8",
+    "fw": "2.0",
+    "worst": 0.001,
+    "target": 2e-09,
+    "unit": "um2",
+    "worst_display": "1e9",
+    "target_display": "2e3"
+  }
+}

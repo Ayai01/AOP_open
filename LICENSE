@@ -1,0 +1,28 @@
+AOP_open Research Evaluation License, version 1.0
+Copyright (c) 2026 Ayai01. All rights reserved except as granted below.
+
+This release contains readable interface code and proprietary native binaries.
+It is a limited-source research release, not an OSI open-source distribution.
+
+Permission is granted to download and execute the official release for personal,
+educational, and non-commercial research evaluation; to make local backup copies;
+and to adapt the readable interface/configuration files for those uses.
+Users may publish their own circuit results obtained with the software, provided
+that the software name, author, release version and repository URL are credited.
+Such permission does not transfer authorship of the optimization method.
+
+Separate written permission from the copyright holder is required for commercial
+use, redistribution of modified or unmodified software, incorporation into other
+software products, or use of the protected implementation to develop or publish
+a derivative optimization method. Share the official repository URL instead of
+redistributing a copy. Do not remove copyright or provenance notices, claim the
+protected implementation as your own, or reverse engineer, decompile, disassemble
+or extract it, except where applicable law grants rights that cannot be excluded.
+
+Third-party components and simulator/process models retain their own licenses.
+No HSPICE executable, foundry process model, or right to use either is supplied.
+NumPy and Cython runtime notices are provided separately.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. TO THE MAXIMUM
+EXTENT PERMITTED BY APPLICABLE LAW, THE AUTHORS ARE NOT LIABLE FOR CLAIMS, DAMAGES
+OR OTHER LIABILITY ARISING FROM THE SOFTWARE OR ITS USE.
